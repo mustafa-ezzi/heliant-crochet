@@ -6,7 +6,7 @@ import { pageTitle } from "../lib/brand";
 import { formatMoney } from "../lib/money";
 import { usePageTitle } from "../lib/usePageTitle";
 
-const API = import.meta.env.VITE_API_BASE || "";
+const API = "";
 
 const NEXT = [
   "We read the note and start the piece.",

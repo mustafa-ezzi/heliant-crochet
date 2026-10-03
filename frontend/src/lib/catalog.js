@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API = import.meta.env.VITE_API_BASE || "";
+const API = "";
 
 export function toProduct(row) {
   const images = row.images?.length ? row.images : [row.image];

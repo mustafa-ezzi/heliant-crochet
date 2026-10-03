@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API = import.meta.env.VITE_API_BASE || "";
+const API = "";
 const FALLBACK = {
   announcement: "Made to order in small batches · delivery in 10–15 working days",
   giftWrap: 6,

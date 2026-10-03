@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { postJson } from "./catalog";
 
-const API = import.meta.env.VITE_API_BASE || "";
+const API = "";
 const AccountContext = createContext(null);
 
 export function AccountProvider({ children }) {

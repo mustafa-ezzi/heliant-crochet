@@ -1,6 +1,6 @@
 import { formatMoney } from "./money";
 
-const API = import.meta.env.VITE_API_BASE || "";
+const API = "";
 
 function csrfToken() {
   const match = document.cookie.match(/(?:^|; )csrftoken=([^;]+)/);
