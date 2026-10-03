@@ -23,7 +23,7 @@ export default function CustomersPage() {
 
   return (
     <div className="desk">
-      <div className="desk-card table-card">
+      <div className="desk-card table-card customer-table">
         <table className="admin-table">
           <thead>
             <tr>
@@ -46,6 +46,17 @@ export default function CustomersPage() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="customer-cards">
+        {rows.map((customer) => (
+          <button className="desk-card order-card customer-card" type="button" key={customer.id} onClick={() => openCustomer(customer.id)}>
+            <strong>{customer.name}</strong>
+            <span>{customer.email}</span>
+            <span>{customer.orders_count} orders</span>
+            <span>{formatMoney(money(customer.spent_cents))}</span>
+            <span>{shortDate(customer.last_order)}</span>
+          </button>
+        ))}
       </div>
       {open ? (
         <article className="desk-card">

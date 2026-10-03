@@ -94,7 +94,7 @@ export default function ReportsPage() {
       {rows.length === 0 ? (
         <p className="empty-copy">No orders in these days.</p>
       ) : (
-        <div className="desk-card table-card">
+        <div className="desk-card table-card report-table">
           <table className="admin-table">
             <thead>
               <tr>
@@ -119,6 +119,18 @@ export default function ReportsPage() {
           </table>
         </div>
       )}
+      {rows.length > 0 ? (
+        <div className="report-cards">
+          {rows.map((order) => (
+            <article className="desk-card order-card" key={order.id}>
+              <strong>{order.number}</strong>
+              <span>{order.name}</span>
+              <StatusSticker status={order.status} />
+              <span>{formatMoney(money(order.subtotal_cents))}</span>
+            </article>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

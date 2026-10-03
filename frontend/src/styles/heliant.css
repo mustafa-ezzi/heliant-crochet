@@ -1551,6 +1551,8 @@ a {
 .field input,
 .field textarea,
 .field select {
+  width: 100%;
+  max-width: 100%;
   min-height: 48px;
   padding: 12px 14px;
   border: var(--border);
@@ -2380,7 +2382,7 @@ a {
 .admin {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 240px minmax(0, 1fr);
   background: var(--cream);
 }
 
@@ -2489,6 +2491,23 @@ a {
   grid-template-columns: 1.3fr 0.7fr;
 }
 
+.stat {
+  background: var(--paper);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  min-width: 0;
+}
+
+.stat b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
 .stat span,
 .desk-card h2,
 .studio-settings h2 {
@@ -2520,6 +2539,7 @@ a {
 
 .admin-table {
   width: 100%;
+  min-width: 640px;
   border-collapse: collapse;
 }
 
@@ -2685,11 +2705,17 @@ a {
 .plain-list li {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   padding: 8px 0;
   border-bottom: 2px dashed var(--lilac);
   font-weight: 700;
+}
+
+.plain-list li span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .plain-list a {
@@ -2753,8 +2779,20 @@ a {
 
 .variant-row {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
+}
+
+.variant-row input:not([type="color"]) {
+  width: 100%;
+  min-width: 0;
+}
+
+.variant-row input[type="color"] {
+  width: 48px;
+  min-width: 48px;
+  height: 44px;
+  padding: 4px;
 }
 
 .dropzone {
@@ -2810,7 +2848,10 @@ a {
   text-transform: uppercase;
 }
 
-.order-cards {
+.order-cards,
+.piece-cards,
+.customer-cards,
+.report-cards {
   display: none;
 }
 
@@ -2820,6 +2861,19 @@ a {
   gap: 6px;
   color: var(--ink);
   text-decoration: none;
+}
+
+.piece-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.customer-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
 }
 
 .empty-copy {
@@ -2842,7 +2896,10 @@ a {
 }
 
 @media (max-width: 900px) {
-  .stat-grid,
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .chart-grid,
   .editor {
     grid-template-columns: 1fr;
@@ -2855,15 +2912,24 @@ a {
 
 @media (max-width: 800px) {
   .admin {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .rail {
+    position: sticky;
+    top: 0;
+    z-index: 30;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    overflow-x: auto;
-    padding: 12px;
+    justify-content: space-between;
+    max-width: 100%;
+    padding: 10px 12px 8px;
     gap: 8px;
+  }
+
+  .rail .lockup {
+    flex: 0 0 auto;
   }
 
   .rail .wordmark {
@@ -2871,31 +2937,99 @@ a {
   }
 
   .rail nav {
+    flex: 1 0 100%;
+    order: 3;
     flex-direction: row;
+    min-width: 0;
+    overflow-x: auto;
   }
 
   .rail a,
   .rail-out {
     white-space: nowrap;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .rail-out {
     margin-top: 0;
+    flex: 0 0 auto;
   }
 
   .admin-main {
-    padding: 20px 16px 40px;
+    padding: 18px 14px 48px;
+  }
+
+  .admin-search,
+  .filter-line select,
+  .report-controls input,
+  .report-controls select,
+  .studio-settings input,
+  .studio-settings textarea {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .report-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+
+  .report-controls label,
+  .filter-line label {
+    min-width: 0;
+  }
+
+  .report-controls label:last-of-type,
+  .report-controls .btn:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .filter-line {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dropzone {
+    min-height: 220px;
+  }
+
+  .order-head {
+    flex-wrap: wrap;
   }
 }
 
 @media (max-width: 700px) {
-  .orders-table {
+  .orders-table,
+  .catalog-table,
+  .customer-table,
+  .report-table {
     display: none;
   }
 
-  .order-cards {
+  .order-cards,
+  .piece-cards,
+  .customer-cards,
+  .report-cards {
     display: grid;
     gap: 12px;
+  }
+
+  .empty-copy {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-row {
+    grid-template-columns: 76px minmax(0, 1fr) 28px;
+    font-size: 13px;
   }
 }
 

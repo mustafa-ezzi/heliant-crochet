@@ -35,7 +35,7 @@ export default function ProductsPage() {
         </Link>
       </div>
       {note ? <p className="saved-line">{note}</p> : null}
-      <div className="desk-card table-card">
+      <div className="desk-card table-card catalog-table">
         <table className="admin-table">
           <thead>
             <tr>
@@ -65,6 +65,25 @@ export default function ProductsPage() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="piece-cards">
+        {rows.map((product) => (
+          <article className="desk-card order-card" key={product.id}>
+            <div className="piece-line">
+              {product.image ? <img className="thumb" src={product.image} alt="" /> : <span className="thumb" />}
+              <strong>{product.name}</strong>
+            </div>
+            <span>{formatMoney(money(product.price_cents))}</span>
+            <span>{product.category}</span>
+            <span>{product.hidden ? "Hidden" : "On the table"}</span>
+            <div className="row-actions">
+              <Link to={`/admin/products/${product.id}`}>Edit</Link>
+              <button type="button" onClick={() => setPending(product)}>
+                Delete
+              </button>
+            </div>
+          </article>
+        ))}
       </div>
       {pending ? (
         <div className="desk-dialog" role="dialog" aria-labelledby="remove-piece">
