@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { Scribble, Spark } from "../components/Doodles";
 import Flower from "../components/Flower";
 import ProductCard from "../components/ProductCard";
 import QuietTable from "../components/QuietTable";
@@ -46,7 +47,9 @@ export default function ShopPage() {
       <header className="page-hero">
         <div className="wrap">
           <p className="eyebrow">The shop</p>
-          <h1>On the table</h1>
+          <h1>
+            On the <Scribble>table</Scribble> <Spark />
+          </h1>
           {status === "ready" ? <p className="lede">{pieceCount(visible.length)}</p> : null}
         </div>
       </header>

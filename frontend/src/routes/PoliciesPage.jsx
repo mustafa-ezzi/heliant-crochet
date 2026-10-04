@@ -19,7 +19,9 @@ export default function PoliciesPage() {
         <div className="wrap">
           <p className="eyebrow">Heliant Hook</p>
           <h1>Policies</h1>
-          <p className="lede">Handmade with love. Please read these before you order.</p>
+          <p className="lede">
+            Handmade with <span className="hand-bit">love</span>. Please read these before you order.
+          </p>
         </div>
       </header>
       <section className="policy-section" aria-label="Studio policies">

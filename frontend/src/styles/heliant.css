@@ -754,6 +754,45 @@ a {
   color: var(--violet);
 }
 
+.hero h1 span.scribble,
+h1 .scribble,
+h2 .scribble {
+  display: inline-block;
+  color: inherit;
+}
+
+.scribble svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.08em;
+  width: 100%;
+  height: 0.28em;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.scribble {
+  position: relative;
+}
+
+.ink-mark {
+  display: inline-block;
+  width: 0.72em;
+  height: 0.72em;
+  margin-left: 0.12em;
+  vertical-align: 0.05em;
+  pointer-events: none;
+}
+
+.hand-bit {
+  font-family: var(--font-hand);
+  font-size: 1.35em;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--plum);
+}
+
 .hero-lead {
   max-width: 42ch;
   margin-top: 16px;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Scribble } from "../components/Doodles";
 import StepGrid from "../components/StepGrid";
 import { pageTitle } from "../lib/brand";
 import { postJson } from "../lib/catalog";
@@ -58,7 +59,9 @@ export default function CustomPage() {
       <header className="page-hero">
         <div className="wrap">
           <p className="eyebrow">Custom, without the fuss</p>
-          <h1>Made for your corner</h1>
+          <h1>
+            Made for your <Scribble>corner</Scribble>
+          </h1>
           <p className="lede">Tell us the colors, the size, and the little details that matter.</p>
         </div>
       </header>

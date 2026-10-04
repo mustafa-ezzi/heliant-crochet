@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Spark } from "../components/Doodles";
 import { Link } from "react-router-dom";
 import { pageTitle } from "../lib/brand";
 import { postJson } from "../lib/catalog";
@@ -43,8 +44,12 @@ export default function ContactPage() {
       <header className="page-hero">
         <div className="wrap">
           <p className="eyebrow">Hello</p>
-          <h1>Contact</h1>
-          <p className="lede">A note to the studio. We read every one.</p>
+          <h1>
+            Contact <Spark />
+          </h1>
+          <p className="lede">
+            A note to the studio. <span className="hand-bit">We read every one.</span>
+          </p>
         </div>
       </header>
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Gift, Heart, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Scribble, YarnLoop } from "../components/Doodles";
 import Flower from "../components/Flower";
 import ProductCard from "../components/ProductCard";
 import QuietTable from "../components/QuietTable";
@@ -54,7 +55,9 @@ export default function HomePage() {
             <p className="eyebrow">Handmade crochet</p>
             <h1>
               Soft things,
-              <span>stitched slowly.</span>
+              <span>
+                stitched <Scribble>slowly</Scribble>.
+              </span>
             </h1>
             <p className="hero-lead">
               Small-batch crochet for bright homes and everyday adventures. Each piece is shaped by
@@ -164,7 +167,9 @@ export default function HomePage() {
         <div className="stitch-wrap">
           <div>
             <p className="fresh">a little note, now and then</p>
-            <h2>Join the stitch list</h2>
+            <h2>
+              Join the stitch list <YarnLoop />
+            </h2>
             <p className="stitch-support">A note when a new drop is ready. No weekly noise.</p>
           </div>
           <form className="stitch-form" onSubmit={onStitchSubmit}>

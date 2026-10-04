@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Scribble, YarnLoop } from "../components/Doodles";
 import Flower from "../components/Flower";
 import { pageTitle } from "../lib/brand";
 import { usePageTitle } from "../lib/usePageTitle";
@@ -38,7 +39,9 @@ export default function AboutPage() {
       <header className="page-hero">
         <div className="wrap">
           <p className="eyebrow">The Heliant Hook studio</p>
-          <h1>A small table, a lot of yarn.</h1>
+          <h1>
+            A small table, a lot of <Scribble>yarn</Scribble>. <YarnLoop />
+          </h1>
           <p className="lede">
             Welcome in. This is the quiet work of one hook, one loop, and colors chosen to make you
             smile.
