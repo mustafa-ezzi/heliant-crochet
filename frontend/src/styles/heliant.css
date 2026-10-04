@@ -597,6 +597,31 @@ a {
   transform: translate(2px, 2px);
 }
 
+.insta-float {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 35;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--butter);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+}
+
+.insta-float:hover {
+  transform: translate(-2px, -2px);
+}
+
+.insta-float:active {
+  transform: translate(2px, 2px);
+}
+
 .footer-fine {
   margin-top: 48px;
   padding-top: 16px;

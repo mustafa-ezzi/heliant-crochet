@@ -1,6 +1,8 @@
-import { Heart, PackageCheck } from "lucide-react";
+import { Instagram, PackageCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import BrandLockup from "./BrandLockup";
+
+const INSTAGRAM = "https://www.instagram.com/heliant.hook/";
 
 export default function Footer() {
   return (
@@ -21,14 +23,17 @@ export default function Footer() {
               <Link to="/about">Our studio</Link>
               <Link to="/custom">Custom orders</Link>
               <Link to="/policies">Policies</Link>
+              <a href={INSTAGRAM} target="_blank" rel="noreferrer">
+                Instagram
+              </a>
             </nav>
           </div>
           <div>
             <p className="hand">Thank you for keeping handmade things in the world.</p>
             <div className="socials">
-              <button type="button" className="social-btn" aria-label="Instagram">
-                <Heart size={18} strokeWidth={2} />
-              </button>
+              <a className="social-btn" href={INSTAGRAM} target="_blank" rel="noreferrer" aria-label="Heliant Hook on Instagram">
+                <Instagram size={18} strokeWidth={2} />
+              </a>
               <Link className="social-btn" to="/policies#shipping" aria-label="Shipping and delivery policy">
                 <PackageCheck size={18} strokeWidth={2} />
               </Link>
@@ -45,6 +50,9 @@ export default function Footer() {
           </p>
         </div>
       </footer>
+      <a className="insta-float" href={INSTAGRAM} target="_blank" rel="noreferrer" aria-label="Heliant Hook on Instagram">
+        <Instagram size={24} strokeWidth={2} />
+      </a>
     </>
   );
 }
