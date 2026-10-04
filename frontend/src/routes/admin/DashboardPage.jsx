@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import { adminRequest, matchesQuery, money, shortDate } from "../../lib/admin";
+import { SHOP_FONTS, shopFont } from "../../lib/fonts";
 import { formatMoney } from "../../lib/money";
 
 const STATUS = {
@@ -53,6 +54,7 @@ export default function DashboardPage() {
   const [desk, setDesk] = useState(null);
   const [note, setNote] = useState("");
   const [gift, setGift] = useState("6");
+  const [font, setFont] = useState("studio");
   const [saved, setSaved] = useState("");
   const [error, setError] = useState("");
 
@@ -61,6 +63,7 @@ export default function DashboardPage() {
       setDesk(data);
       setNote(data.announcement);
       setGift(String(data.gift_wrap_cents / 100));
+      setFont(data.font || "studio");
     });
   }, []);
 
@@ -72,12 +75,13 @@ export default function DashboardPage() {
     try {
       const next = await adminRequest("/api/v1/admin/settings", {
         method: "PATCH",
-        body: { announcement: note, gift_wrap_cents: cents },
+        body: { announcement: note, gift_wrap_cents: cents, font },
       });
-      setSaved("Saved. The shop will show this line.");
+      setSaved("Saved. Reload the shop to see this font.");
       setNote(next.announcement);
+      setFont(next.font || font);
     } catch (err) {
-      setError(err.payload?.announcement || err.payload?.gift_wrap || err.message);
+      setError(err.payload?.announcement || err.payload?.gift_wrap || err.payload?.font || err.message);
     }
   }
 
@@ -147,6 +151,18 @@ export default function DashboardPage() {
             <textarea id="announcement" value={note} onChange={(event) => setNote(event.target.value)} rows={3} />
             <label htmlFor="gift-wrap">Gift wrap (PKR)</label>
             <input id="gift-wrap" value={gift} onChange={(event) => setGift(event.target.value)} inputMode="decimal" />
+            <label htmlFor="shop-font">Shop font</label>
+            <select id="shop-font" value={font} onChange={(event) => setFont(event.target.value)}>
+              {SHOP_FONTS.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+            <p className="font-preview" style={{ fontFamily: shopFont(font).display }}>
+              heliant hook
+              <span style={{ fontFamily: shopFont(font).body }}>Handmade, stitched slowly.</span>
+            </p>
             {error ? <p className="error">{error}</p> : null}
             {saved ? <p className="saved-line">{saved}</p> : null}
             <button className="btn" type="submit">

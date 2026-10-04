@@ -4,6 +4,7 @@ const API = "";
 const FALLBACK = {
   announcement: "Made to order in small batches · delivery in 10–15 working days",
   giftWrap: 6,
+  font: "studio",
 };
 
 export function useStudioSettings() {
@@ -18,6 +19,7 @@ export function useStudioSettings() {
         setSettings({
           announcement: data.announcement || FALLBACK.announcement,
           giftWrap: data.gift_wrap_cents / 100,
+          font: data.font || FALLBACK.font,
         });
       })
       .catch(() => {});

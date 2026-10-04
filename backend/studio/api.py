@@ -56,6 +56,7 @@ def studio_settings(request):
         {
             "announcement": settings.announcement,
             "gift_wrap_cents": settings.gift_wrap_cents,
+            "font": settings.font,
         }
     )
 

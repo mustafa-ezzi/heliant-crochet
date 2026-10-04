@@ -72,12 +72,16 @@ class CustomRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+SHOP_FONTS = ("studio", "fraunces", "nunito", "playfair", "cormorant", "quicksand")
+
+
 class StudioSettings(models.Model):
     announcement = models.CharField(
         max_length=180,
         default="Made to order in small batches · delivery in 10–15 working days",
     )
     gift_wrap_cents = models.PositiveIntegerField(default=600)
+    font = models.CharField(max_length=32, default="studio")
 
     @classmethod
     def load(cls):

@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from catalog.api import catalog_queryset
 from catalog.models import Category, Product, ProductImage, Variant
 from studio.api import serialize_order, text
-from studio.models import CustomRequest, Order, OrderLine, StitchSignup, StudioSettings
+from studio.models import SHOP_FONTS, CustomRequest, Order, OrderLine, StitchSignup, StudioSettings
 from studio.storage import ShelfError, store_photo
 
 OPEN = {Order.Status.PENDING, Order.Status.STITCHING, Order.Status.SHIPPED}
@@ -283,6 +283,7 @@ def dashboard(request):
             "top_pieces": list(top),
             "announcement": settings.announcement,
             "gift_wrap_cents": settings.gift_wrap_cents,
+            "font": settings.font,
         }
     )
 
@@ -302,10 +303,20 @@ def update_settings(request):
         gift_wrap_cents = -1
     if gift_wrap_cents < 0:
         return Response({"gift_wrap": "Add a gift-wrap amount."}, status=400)
+    font = text(request.data.get("font")) or "studio"
+    if font not in SHOP_FONTS:
+        return Response({"font": "Choose a font from the list."}, status=400)
     settings.announcement = announcement[:180]
     settings.gift_wrap_cents = gift_wrap_cents
+    settings.font = font
     settings.save()
-    return Response({"announcement": settings.announcement, "gift_wrap_cents": settings.gift_wrap_cents})
+    return Response(
+        {
+            "announcement": settings.announcement,
+            "gift_wrap_cents": settings.gift_wrap_cents,
+            "font": settings.font,
+        }
+    )
 
 
 @api_view(["GET", "POST"])
