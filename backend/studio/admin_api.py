@@ -13,7 +13,7 @@ from catalog.api import catalog_queryset
 from catalog.models import Category, Product, ProductImage, Variant
 from studio.api import serialize_order, text
 from studio.models import SHOP_FONTS, CustomRequest, Order, OrderLine, StitchSignup, StudioSettings
-from studio.storage import ShelfError, store_photo
+from studio.storage import ShelfError, remove_photos, store_photo
 
 OPEN = {Order.Status.PENDING, Order.Status.STITCHING, Order.Status.SHIPPED}
 
@@ -390,7 +390,9 @@ def admin_product_detail(request, product_id):
                     "detail": "This piece is on a past order, so it stays in the books and leaves the shop.",
                 }
             )
+        photo_urls = list(product.images.values_list("src", flat=True))
         product.delete()
+        remove_photos(photo_urls)
         return Response({"deleted": True})
     product, error = write_product(request, product)
     if error:

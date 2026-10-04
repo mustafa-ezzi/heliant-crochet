@@ -23,23 +23,14 @@ class ShelfError(Exception):
         self.status = status
 
 
-def store_photo(uploaded):
-    content_type = (getattr(uploaded, "content_type", "") or "").split(";")[0].strip().lower()
-    extension = ALLOWED.get(content_type)
-    if extension is None:
-        raise ShelfError("Use a JPG, PNG, WEBP, or GIF photo.")
-    if uploaded.size > MAX_BYTES:
-        raise ShelfError("That photo is larger than 8 MB.")
-
+def shelf():
     account = os.environ.get("R2_ACCOUNT_ID", "")
     access_key = os.environ.get("R2_ACCESS_KEY_ID", "")
     secret = os.environ.get("R2_SECRET_ACCESS_KEY", "")
     public = os.environ.get("R2_PUBLIC_URL", "").rstrip("/")
     bucket = os.environ.get("R2_BUCKET", "heliant-media")
     if not account or not access_key or not secret or not public:
-        raise ShelfError("The photo shelf is not connected yet.", 503)
-
-    key = f"products/{uuid.uuid4().hex}{extension}"
+        return None
     client = boto3.client(
         "s3",
         endpoint_url=f"https://{account}.r2.cloudflarestorage.com",
@@ -53,6 +44,23 @@ def store_photo(uploaded):
             response_checksum_validation="when_required",
         ),
     )
+    return client, bucket, public
+
+
+def store_photo(uploaded):
+    content_type = (getattr(uploaded, "content_type", "") or "").split(";")[0].strip().lower()
+    extension = ALLOWED.get(content_type)
+    if extension is None:
+        raise ShelfError("Use a JPG, PNG, WEBP, or GIF photo.")
+    if uploaded.size > MAX_BYTES:
+        raise ShelfError("That photo is larger than 8 MB.")
+
+    connected = shelf()
+    if connected is None:
+        raise ShelfError("The photo shelf is not connected yet.", 503)
+    client, bucket, public = connected
+
+    key = f"products/{uuid.uuid4().hex}{extension}"
     try:
         client.upload_fileobj(
             uploaded.file,
@@ -64,3 +72,23 @@ def store_photo(uploaded):
         log.exception("R2 upload failed")
         raise ShelfError("The photo did not reach the shelf. Please try again.", 502) from None
     return f"{public}/{key}"
+
+
+def remove_photos(urls):
+    connected = shelf()
+    if connected is None:
+        log.warning("R2 is not connected, so product photos were left on the shelf")
+        return
+    client, bucket, public = connected
+    prefix = f"{public}/"
+    for url in urls:
+        src = str(url or "").split("?")[0]
+        if not src.startswith(prefix):
+            continue
+        key = src[len(prefix) :].lstrip("/")
+        if not key.startswith("products/") or ".." in key:
+            continue
+        try:
+            client.delete_object(Bucket=bucket, Key=key)
+        except Exception:
+            log.exception("R2 delete failed")
