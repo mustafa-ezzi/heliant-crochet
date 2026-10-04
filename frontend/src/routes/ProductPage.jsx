@@ -80,7 +80,7 @@ function ProductDetail({ product, related }) {
           <div className="thumbs" role="group" aria-label="Photos">
             {photos.map((src, index) => (
               <button
-                key={src}
+                key={`${src}-${index}`}
                 type="button"
                 className="thumb"
                 aria-pressed={photo === index}

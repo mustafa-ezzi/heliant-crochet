@@ -12,7 +12,7 @@ const EMPTY = {
   fiber: "",
   hidden: false,
   description: "",
-  image: "",
+  images: [],
   colors: [{ name: "Lilac", hex: "#c9a6e0" }],
   sizes: [{ name: "One size", stock: "" }],
 };
@@ -35,7 +35,7 @@ export default function ProductEditorPage() {
         fiber: product.fiber,
         hidden: product.hidden,
         description: product.description,
-        image: product.image,
+        images: product.images?.length ? product.images : product.image ? [product.image] : [],
         colors: product.colors.length ? product.colors : EMPTY.colors,
         sizes: product.sizes.length
           ? product.sizes.map((size) => ({ name: size.name, stock: size.stock ?? "" }))
@@ -50,19 +50,40 @@ export default function ProductEditorPage() {
   }
 
   async function onPhoto(event) {
-    const file = event.target.files?.[0];
+    const files = [...(event.target.files || [])];
     event.target.value = "";
-    if (!file) return;
+    if (!files.length) return;
+    const room = 8 - fields.images.length;
+    if (room < 1) {
+      setErrors((current) => ({ ...current, image: "Eight photos is the most for one piece." }));
+      return;
+    }
     setUploading(true);
     setErrors((current) => ({ ...current, image: undefined }));
+    const added = [];
     try {
-      const url = await uploadPhoto(file);
-      set("image", url);
+      for (const file of files.slice(0, room)) {
+        added.push(await uploadPhoto(file));
+      }
+      setFields((current) => ({ ...current, images: [...current.images, ...added] }));
+      if (files.length > room) {
+        setErrors((current) => ({ ...current, image: "Eight photos is the most for one piece." }));
+      }
     } catch (error) {
+      if (added.length) {
+        setFields((current) => ({ ...current, images: [...current.images, ...added] }));
+      }
       setErrors((current) => ({ ...current, image: error.message }));
     } finally {
       setUploading(false);
     }
+  }
+
+  function removePhoto(index) {
+    setFields((current) => ({
+      ...current,
+      images: current.images.filter((_, photoIndex) => photoIndex !== index),
+    }));
   }
 
   async function onSubmit(event) {
@@ -85,7 +106,7 @@ export default function ProductEditorPage() {
       fiber: fields.fiber.trim(),
       hidden: fields.hidden,
       description: fields.description.trim(),
-      image: fields.image,
+      images: fields.images,
       colors: fields.colors.filter((color) => color.name.trim()),
       sizes: fields.sizes
         .filter((size) => size.name.trim())
@@ -178,12 +199,39 @@ export default function ProductEditorPage() {
           Save the piece
         </button>
       </div>
-      <label className="dropzone">
-        {fields.image ? <img src={fields.image} alt="" /> : <Flower />}
-        <span>{uploading ? "Sending the photo…" : "drop a photo of the piece"}</span>
-        {errors.image ? <p className="error">{errors.image}</p> : null}
-        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={onPhoto} disabled={uploading} />
-      </label>
+      <div className="photo-board">
+        {fields.images.length ? (
+          <div className="editor-photos">
+            {fields.images.map((src, index) => (
+              <figure className="editor-photo" key={`${src}-${index}`}>
+                <img src={src} alt="" />
+                <figcaption>{index === 0 ? "Cover" : index + 1}</figcaption>
+                <button type="button" onClick={() => removePhoto(index)} aria-label={`Remove photo ${index + 1}`}>
+                  Remove
+                </button>
+              </figure>
+            ))}
+          </div>
+        ) : null}
+        <label className={fields.images.length ? "dropzone is-compact" : "dropzone"}>
+          {fields.images.length ? null : <Flower />}
+          <span>
+            {uploading
+              ? "Sending the photos…"
+              : fields.images.length
+                ? "Add another photo"
+                : "Drop photos of the piece"}
+          </span>
+          {errors.image ? <p className="error">{errors.image}</p> : null}
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            multiple
+            onChange={onPhoto}
+            disabled={uploading || fields.images.length >= 8}
+          />
+        </label>
+      </div>
     </form>
   );
 

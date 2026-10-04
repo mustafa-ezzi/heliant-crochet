@@ -99,6 +99,7 @@ def serialize_admin_product(product):
         "description": product.description,
         "hidden": product.hidden,
         "image": images[0].src if images else "",
+        "images": [image.src for image in images],
         "colors": colors,
         "sizes": sizes,
     }
@@ -144,6 +145,30 @@ def replace_variants(product, colors, sizes):
     return None
 
 
+SHOP_CATEGORIES = ["Wear", "Home", "Baby", "Custom"]
+
+
+def photo_list(body):
+    if isinstance(body.get("images"), list):
+        raw = body.get("images")
+    else:
+        single = str(body.get("image") or "").strip()
+        raw = [single] if single else []
+    photos = []
+    for item in raw:
+        src = str(item or "").strip()
+        if not src:
+            continue
+        if src.startswith("data:"):
+            return None, "Drop the photo again so it can be stored on the shelf."
+        if not (src.startswith("https://") or src.startswith("/images/")):
+            return None, "That photo address is not one we can show."
+        photos.append(src)
+    if len(photos) > 8:
+        return None, "Eight photos is the most for one piece."
+    return photos, None
+
+
 def write_product(request, product=None):
     body = request.data
     name = text(body.get("name"))
@@ -155,6 +180,11 @@ def write_product(request, product=None):
     if not name:
         errors["name"] = "Name the piece."
     category = Category.objects.filter(name__iexact=category_name).first()
+    if category is None and category_name in SHOP_CATEGORIES:
+        category, _created = Category.objects.get_or_create(
+            slug=category_name.lower(),
+            defaults={"name": category_name, "position": SHOP_CATEGORIES.index(category_name)},
+        )
     if category is None:
         errors["category"] = "Choose a category from the shop."
     try:
@@ -165,11 +195,9 @@ def write_product(request, product=None):
         errors["price"] = "Add a price."
     if not description:
         errors["description"] = "Tell a little about the piece."
-    raw_image = str(body.get("image") or "").strip()
-    if raw_image.startswith("data:"):
-        errors["image"] = "Drop the photo again so it can be stored on the shelf."
-    elif raw_image and not (raw_image.startswith("https://") or raw_image.startswith("/images/")):
-        errors["image"] = "That photo address is not one we can show."
+    photos, photo_error = photo_list(body)
+    if photo_error:
+        errors["image"] = photo_error
     for size in body.get("sizes") or []:
         raw_stock = size.get("stock")
         if raw_stock in (None, ""):
@@ -210,10 +238,14 @@ def write_product(request, product=None):
     if problem:
         return None, Response({"sizes": problem}, status=400)
 
-    image = raw_image
-    if image:
+    if "images" in body or photos:
         product.images.all().delete()
-        ProductImage.objects.create(product=product, src=str(image), alt=name, position=0)
+        ProductImage.objects.bulk_create(
+            [
+                ProductImage(product=product, src=src, alt=name, position=index)
+                for index, src in enumerate(photos)
+            ]
+        )
     product = catalog_queryset(include_hidden=True).get(pk=product.pk)
     return product, None
 

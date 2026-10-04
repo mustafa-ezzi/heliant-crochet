@@ -1690,6 +1690,7 @@ a {
 
 .thumbs {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 12px;
 }
@@ -2871,6 +2872,61 @@ a {
 .dropzone svg {
   width: 64px;
   height: 96px;
+}
+
+.dropzone.is-compact {
+  min-height: 120px;
+}
+
+.photo-board {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.editor-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 10px;
+}
+
+.editor-photo {
+  position: relative;
+  margin: 0;
+}
+
+.editor-photo img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: var(--border);
+  border-radius: 14px;
+  background: var(--petal);
+}
+
+.editor-photo figcaption {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--plum);
+}
+
+.editor-photo button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--danger);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 8px;
+  cursor: pointer;
 }
 
 .filter-line,
