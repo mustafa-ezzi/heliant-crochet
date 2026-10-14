@@ -35,6 +35,24 @@ export const SHOP_FONTS = [
     display: '"Quicksand", "Avenir Next", "Segoe UI", sans-serif',
     body: '"Quicksand", "Avenir Next", "Segoe UI", sans-serif',
   },
+  {
+    id: "inter",
+    label: "Inter",
+    display: '"Inter", "Segoe UI", sans-serif',
+    body: '"Inter", "Segoe UI", sans-serif',
+  },
+  {
+    id: "dm-sans",
+    label: "DM Sans",
+    display: '"DM Sans", "Segoe UI", sans-serif',
+    body: '"DM Sans", "Segoe UI", sans-serif',
+  },
+  {
+    id: "manrope",
+    label: "Manrope",
+    display: '"Manrope", "Segoe UI", sans-serif',
+    body: '"Manrope", "Segoe UI", sans-serif',
+  },
 ];
 
 export function shopFont(id) {

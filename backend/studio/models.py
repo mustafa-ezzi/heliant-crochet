@@ -72,7 +72,7 @@ class CustomRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-SHOP_FONTS = ("studio", "fraunces", "nunito", "playfair", "cormorant", "quicksand")
+SHOP_FONTS = ("studio", "fraunces", "nunito", "playfair", "cormorant", "quicksand", "inter", "dm-sans", "manrope")
 
 
 class StudioSettings(models.Model):
